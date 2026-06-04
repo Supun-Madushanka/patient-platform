@@ -7,54 +7,51 @@ spring:
 
   cloud:
     gateway:
-      routes:
+      server:
+        webmvc:
+          routes:
+            - id: auth-service
+              uri: lb://auth-service
+              predicates:
+                - Path=/api/auth/**
 
-        # Auth Service
-        - id: auth-service
-          uri: lb://auth-service        # lb = load balanced via Eureka
-          predicates:
-            - Path=/api/auth/**         # any request starting with /api/auth
+            - id: patient-service
+              uri: lb://patient-service
+              predicates:
+                - Path=/api/patients/**
 
-        # Patient Service
-        - id: patient-service
-          uri: lb://patient-service
-          predicates:
-            - Path=/api/patients/**
+            - id: doctor-service
+              uri: lb://doctor-service
+              predicates:
+                - Path=/api/doctors/**
 
-        # Doctor Service
-        - id: doctor-service
-          uri: lb://doctor-service
-          predicates:
-            - Path=/api/doctors/**
+            - id: appointment-service
+              uri: lb://appointment-service
+              predicates:
+                - Path=/api/appointments/**
 
-        # Appointment Service
-        - id: appointment-service
-          uri: lb://appointment-service
-          predicates:
-            - Path=/api/appointments/**
+            - id: medical-records-service
+              uri: lb://medical-records-service
+              predicates:
+                - Path=/api/records/**
 
-        # Medical Records Service
-        - id: medical-records-service
-          uri: lb://medical-records-service
-          predicates:
-            - Path=/api/records/**
+            - id: billing-service
+              uri: lb://billing-service
+              predicates:
+                - Path=/api/invoices/**
 
-        # Billing Service
-        - id: billing-service
-          uri: lb://billing-service
-          predicates:
-            - Path=/api/invoices/**
+            - id: notification-service
+              uri: lb://notification-service
+              predicates:
+                - Path=/api/notifications/**
 
-        # Notification Service
-        - id: notification-service
-          uri: lb://notification-service
-          predicates:
-            - Path=/api/notifications/**
-
-# Eureka — where to find service-registry
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
   instance:
     prefer-ip-address: true
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
