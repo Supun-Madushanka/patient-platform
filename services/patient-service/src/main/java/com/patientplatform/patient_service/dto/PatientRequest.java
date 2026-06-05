@@ -8,9 +8,6 @@ import java.time.LocalDate;
 @Data
 public class PatientRequest {
 
-    @NotNull(message = "User ID is required")
-    private Long userId;
-
     @NotBlank(message = "First name is required")
     private String firstName;
 

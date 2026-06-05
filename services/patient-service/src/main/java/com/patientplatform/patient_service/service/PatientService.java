@@ -19,12 +19,13 @@ public class PatientService {
     private final PatientRepository patientRepository;
 
     // Create patient profile
-    public PatientResponse createPatient(PatientRequest request) {
-        if (patientRepository.existsByUserId(request.getUserId())) {
+    public PatientResponse createPatient(PatientRequest request, Long userId) {
+        if (patientRepository.existsByUserId(userId)) {
             throw new CustomException("Patient profile already exists for this user");
         }
 
         Patient patient = new Patient();
+        patient.setUserId(userId);
         mapRequestToPatient(request, patient);
 
         Patient saved = patientRepository.save(patient);
@@ -54,7 +55,7 @@ public class PatientService {
     }
 
     // Update patient
-    public PatientResponse updatePatient(Long id, PatientRequest request) {
+    public PatientResponse updatePatient(Long id, PatientRequest request, Long userId) {
         Patient patient = patientRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Patient not found"));
 
@@ -74,7 +75,6 @@ public class PatientService {
     // ── Helpers ──────────────────────────────────────────
 
     private void mapRequestToPatient(PatientRequest request, Patient patient) {
-        patient.setUserId(request.getUserId());
         patient.setFirstName(request.getFirstName());
         patient.setLastName(request.getLastName());
         patient.setDateOfBirth(request.getDateOfBirth());
